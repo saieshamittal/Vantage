@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  
+  --color-background: #0a0a0f;
+  --color-foreground: #f5f5f7;
+  --color-muted: #1a1a24;
+  --color-muted-foreground: #a1a1aa;
+  --color-primary: #00d4c8;
+  --color-primary-foreground: #0a0a0f;
+  --color-secondary: #1e1e2e;
+  --color-secondary-foreground: #f5f5f7;
+  --color-accent: #00b4a8;
+  --color-accent-foreground: #0a0a0f;
+  --color-border: #2a2a3a;
+  --color-input: #1a1a24;
+  --color-ring: #00d4c8;
+  --color-card: #12121a;
+  --color-card-foreground: #f5f5f7;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f5f5f7;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
+/* Glass effect utility */
+.glass {
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 20px rgba(0, 212, 200, 0.3);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 200, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 212, 200, 0.5); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}

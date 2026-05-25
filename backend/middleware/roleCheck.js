@@ -1,0 +1,12 @@
+// Returns middleware that only allows users with one of the specified roles
+// Usage: roleCheck("admin") or roleCheck("admin", "company")
+const roleCheck = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied: insufficient permissions" });
+    }
+    next();
+  };
+};
+
+module.exports = { roleCheck };

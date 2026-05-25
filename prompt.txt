@@ -1,0 +1,207 @@
+You are a senior full-stack engineer. I want you to build a production-quality project step-by-step, not dump everything at once.
+
+Project Name: Vantage
+
+Project Overview  
+Vantage is a multi-tenant SaaS platform for businesses to manage inventory, orders, and sales, with AI-powered demand prediction and insights.  
+This is not a customer-facing e-commerce store. It is a business intelligence and inventory management platform.
+
+---
+
+Tech Stack
+
+Frontend:
+- React (with Vite)
+- Tailwind CSS
+
+Backend:
+- Node.js with Express
+
+Database:
+- PostgreSQL
+
+Authentication:
+- JWT
+- bcrypt
+
+---
+
+Core Features to Implement
+
+1. Authentication and Roles
+- Admin (platform owner)
+- Company (tenant)
+- Company Users (optional: manager/staff roles)
+- JWT-based authentication
+- Role-based access control (RBAC)
+
+2. Multi-Tenant Architecture
+- Each company has isolated data
+- Use company_id in all relevant tables
+- Ensure secure access control per company
+
+3. Inventory Management
+- CRUD for products
+- Fields: name, price, stock, category, company_id
+- Stock updates
+
+4. Order and Sales Management
+- Create orders
+- Reduce stock automatically
+- Track revenue and order history
+
+5. Analytics Dashboard
+- Revenue over time
+- Top-selling products
+- Sales trends using SQL aggregation
+
+6. AI Demand Prediction
+- Moving average or trend-based prediction
+- Predict future demand based on past sales
+
+7. AI Insights Engine
+Generate insights such as:
+- Product will run out in a few days
+- Sales increased or decreased
+- Restock recommendations  
+Start with rule-based logic
+
+8. Smart Alerts System
+- Low stock alerts
+- Demand spike alerts
+
+9. Admin Dashboard
+- View all companies
+- Monitor usage
+
+10. Search and Filtering
+- Search products
+- Filter by category and stock
+
+11. Security
+- Password hashing using bcrypt
+- JWT middleware
+- Role-based authorization
+
+12. Activity History
+- Log actions such as stock updates and orders
+- Table: activity_logs
+
+---
+
+Database Design
+
+Create schema for:
+
+- users (id, name, email, password, role, company_id)
+- companies (id, name, created_at)
+- products (id, name, price, stock, company_id)
+- orders (id, product_id, quantity, total_price, company_id, created_at)
+- activity_logs (id, action, user_id, company_id, timestamp)
+
+---
+
+Folder Structure
+
+Backend:
+- controllers
+- routes
+- middleware
+- models
+- config
+
+Frontend:
+- components
+- pages
+- services
+- hooks
+
+---
+
+Development Rules
+
+- Build step-by-step, not everything at once
+- Start with backend first
+- After backend basics, move to frontend
+- Keep code modular and clean
+- Use REST APIs
+- Always enforce company_id for data isolation
+- Add comments where necessary
+
+---
+
+Execution Plan
+
+Phase 1:
+- Setup backend project
+- Setup Express server
+- Setup PostgreSQL connection
+- Create folder structure
+
+Phase 2:
+- Implement authentication (register and login)
+- JWT token system
+- Role-based middleware
+
+Phase 3:
+- Inventory APIs
+
+Phase 4:
+- Orders and stock logic
+
+Phase 5:
+- Analytics APIs
+
+Phase 6:
+- AI prediction logic
+
+Phase 7:
+- AI insights engine
+
+Phase 8:
+- Alerts system
+
+Phase 9:
+- Admin dashboard APIs
+
+Phase 10:
+- Frontend setup (React with Tailwind)
+- Connect APIs
+
+---
+
+Environment and Setup Constraints
+
+- Use CommonJS (require) for backend
+- Use nodemon for development
+- Use pg library for PostgreSQL
+- Do not use any ORM
+- Use plain SQL queries
+
+- Backend runs on port 5000
+- Frontend runs on port 5173
+
+- Use .env file for:
+  - PORT
+  - DATABASE_URL
+  - JWT_SECRET
+
+---
+
+Important Instructions
+
+- Do not generate the entire project at once
+- Ask before moving to the next phase
+- Explain briefly what you are doing
+- Generate code file-by-file
+- Ensure everything runs without errors
+
+---
+
+Start with:
+1. Backend project setup
+2. Folder structure
+3. Basic Express server
+4. PostgreSQL connection
+
+Then stop and wait for confirmation
