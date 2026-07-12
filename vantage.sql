@@ -1,0 +1,845 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict wvEp6x4LkXWLRly3KJxhUurT5jQkb3aZKCucdg0sCVU9WsCXOd32Gm9Ke5McwQb
+
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
+
+-- Started on 2026-07-12 19:34:00
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 220 (class 1259 OID 16390)
+-- Name: companies; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.companies (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    website character varying(255),
+    address text,
+    email character varying(255),
+    plan character varying(50),
+    users_count integer DEFAULT 0,
+    status character varying(50) DEFAULT 'Active'::character varying
+);
+
+
+ALTER TABLE public.companies OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16389)
+-- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.companies_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.companies_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5010 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: companies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.companies_id_seq OWNED BY public.companies.id;
+
+
+--
+-- TOC entry 226 (class 1259 OID 16438)
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    product_id integer,
+    quantity integer NOT NULL,
+    total_price numeric(10,2) NOT NULL,
+    company_id integer,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 16437)
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orders_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5011 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 16421)
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.products (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    price integer NOT NULL,
+    stock integer NOT NULL,
+    category character varying(100),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    company_id integer
+);
+
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16420)
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.products_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5012 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 16400)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
+    password text NOT NULL,
+    role character varying(50) DEFAULT 'company_user'::character varying,
+    company_id integer,
+    created_at timestamp without time zone DEFAULT now(),
+    phone character varying(50),
+    location character varying(255),
+    notification_settings jsonb DEFAULT '{}'::jsonb
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16399)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5013 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- TOC entry 4824 (class 2604 OID 16393)
+-- Name: companies id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.companies ALTER COLUMN id SET DEFAULT nextval('public.companies_id_seq'::regclass);
+
+
+--
+-- TOC entry 4834 (class 2604 OID 16441)
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
+-- TOC entry 4832 (class 2604 OID 16424)
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- TOC entry 4828 (class 2604 OID 16403)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 4998 (class 0 OID 16390)
+-- Dependencies: 220
+-- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.companies (id, name, created_at, website, address, email, plan, users_count, status) FROM stdin;
+1	Acme Corporation	2024-01-15 00:00:00	\N	\N	contact@acme.com	Enterprise	45	Active
+3	Global Trade LLC	2023-11-08 00:00:00	\N	\N	hello@globaltrade.com	Enterprise	78	Active
+4	Innovation Labs	2024-03-01 00:00:00	https://example.com	123 Business Street, Suite 100\nSan Francisco, CA 94102	team@innovationlabs.co	Starter	5	Trial
+5	DataFlow Systems	2024-01-28 00:00:00	\N	\N	support@dataflow.tech	Professional	23	Active
+6	CloudNine Solutions	2023-09-15 00:00:00	\N	\N	info@cloudnine.io	Enterprise	56	Active
+7	NextGen Ventures	2024-02-10 00:00:00	\N	\N	contact@nextgen.vc	Professional	18	Active
+8	Quantum Analytics	2024-01-05 00:00:00	\N	\N	hello@quantum.ai	Starter	8	Suspended
+11	shea.co	2026-05-25 17:07:00.583798	\N	\N	shea.co@company.com	Starter	2	Active
+13	x	2026-05-25 17:38:11.48042	\N	\N	\N	\N	0	Active
+2	TechStart Inc	2024-02-20 00:00:00	https://example.com	123 Business Street, Suite 100\nSan Francisco, CA 94102	info@techstart.io	Professional	12	Active
+\.
+
+
+--
+-- TOC entry 5004 (class 0 OID 16438)
+-- Dependencies: 226
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.orders (id, product_id, quantity, total_price, company_id, created_at) FROM stdin;
+1	1	3	1497.00	2	2026-04-16 20:09:17.365454
+2	69	1	755.00	1	2026-04-16 20:58:48.838744
+3	88	1	974.00	1	2026-04-14 20:58:48.838744
+4	75	1	190.00	1	2026-04-14 20:58:48.838744
+5	53	1	510.00	1	2026-04-13 20:58:48.838744
+6	93	1	120.00	1	2026-04-12 20:58:48.838744
+7	68	1	407.00	1	2026-04-12 20:58:48.838744
+8	41	1	275.00	1	2026-04-11 20:58:48.838744
+9	15	1	887.00	1	2026-04-09 20:58:48.838744
+10	96	1	140.00	1	2026-04-09 20:58:48.838744
+11	74	1	260.00	1	2026-04-09 20:58:48.838744
+12	12	1	521.00	1	2026-04-09 20:58:48.838744
+13	97	1	145.00	1	2026-04-08 20:58:48.838744
+14	36	1	175.00	1	2026-04-06 20:58:48.838744
+15	8	1	608.00	1	2026-04-06 20:58:48.838744
+16	32	1	746.00	1	2026-04-05 20:58:48.838744
+17	25	1	707.00	1	2026-04-04 20:58:48.838744
+18	46	1	150.00	1	2026-04-04 20:58:48.838744
+19	6	1	385.00	1	2026-04-03 20:58:48.838744
+20	94	1	943.00	1	2026-04-03 20:58:48.838744
+21	14	1	266.00	1	2026-04-01 20:58:48.838744
+22	50	1	366.00	1	2026-04-01 20:58:48.838744
+23	42	1	137.00	1	2026-04-01 20:58:48.838744
+24	73	1	343.00	1	2026-03-31 20:58:48.838744
+25	21	1	189.00	1	2026-03-31 20:58:48.838744
+26	35	2	1078.00	1	2026-03-29 20:58:48.838744
+27	26	2	1884.00	1	2026-03-28 20:58:48.838744
+28	44	2	256.00	1	2026-03-25 20:58:48.838744
+29	95	2	1492.00	1	2026-03-24 20:58:48.838744
+30	84	2	908.00	1	2026-03-24 20:58:48.838744
+31	58	2	298.00	1	2026-03-23 20:58:48.838744
+32	31	2	1696.00	1	2026-03-21 20:58:48.838744
+33	76	2	1064.00	1	2026-03-21 20:58:48.838744
+34	64	2	1996.00	1	2026-03-21 20:58:48.838744
+35	47	2	1830.00	1	2026-03-21 20:58:48.838744
+36	48	2	1166.00	1	2026-03-20 20:58:48.838744
+37	49	2	808.00	1	2026-03-20 20:58:48.838744
+38	85	2	322.00	1	2026-03-15 20:58:48.838744
+39	11	2	512.00	1	2026-03-12 20:58:48.838744
+40	82	3	1080.00	1	2026-03-10 20:58:48.838744
+41	17	3	2361.00	1	2026-03-10 20:58:48.838744
+42	39	3	1296.00	1	2026-03-09 20:58:48.838744
+43	92	3	633.00	1	2026-03-06 20:58:48.838744
+44	7	3	1761.00	1	2026-03-06 20:58:48.838744
+45	62	3	879.00	1	2026-03-05 20:58:48.838744
+46	9	3	2913.00	1	2026-02-28 20:58:48.838744
+47	89	3	2490.00	1	2026-02-28 20:58:48.838744
+48	22	3	1326.00	1	2026-02-28 20:58:48.838744
+49	63	3	1962.00	1	2026-02-27 20:58:48.838744
+50	10	3	1995.00	1	2026-02-27 20:58:48.838744
+51	57	3	2802.00	1	2026-02-24 20:58:48.838744
+52	80	3	1722.00	1	2026-02-23 20:58:48.838744
+53	38	3	1713.00	1	2026-02-23 20:58:48.838744
+54	24	3	2571.00	1	2026-02-22 20:58:48.838744
+55	33	3	2817.00	1	2026-02-22 20:58:48.838744
+56	66	4	2516.00	1	2026-02-21 20:58:48.838744
+57	40	4	2796.00	1	2026-02-21 20:58:48.838744
+58	43	4	3836.00	1	2026-02-19 20:58:48.838744
+59	87	4	2052.00	1	2026-02-19 20:58:48.838744
+60	4	4	3836.00	1	2026-02-19 20:58:48.838744
+61	19	4	2600.00	1	2026-02-18 20:58:48.838744
+62	60	4	716.00	1	2026-02-18 20:58:48.838744
+63	70	4	3540.00	1	2026-02-18 20:58:48.838744
+64	91	4	1580.00	1	2026-02-17 20:58:48.838744
+65	65	4	2056.00	1	2026-02-17 20:58:48.838744
+66	90	4	2164.00	1	2026-02-17 20:58:48.838744
+67	30	4	2760.00	1	2026-02-16 20:58:48.838744
+68	81	4	1128.00	1	2026-02-15 20:58:48.838744
+69	5	4	2392.00	1	2026-02-15 20:58:48.838744
+70	99	4	560.00	1	2026-02-14 20:58:48.838744
+71	16	4	2436.00	1	2026-02-13 20:58:48.838744
+72	56	4	1980.00	1	2026-02-13 20:58:48.838744
+73	52	4	1572.00	1	2026-02-13 20:58:48.838744
+74	27	4	960.00	1	2026-02-13 20:58:48.838744
+75	18	4	3832.00	1	2026-02-12 20:58:48.838744
+76	67	4	832.00	1	2026-02-12 20:58:48.838744
+77	101	4	2640.00	1	2026-02-10 20:58:48.838744
+78	83	4	3724.00	1	2026-02-10 20:58:48.838744
+79	61	4	1348.00	1	2026-02-10 20:58:48.838744
+80	71	4	1684.00	1	2026-02-10 20:58:48.838744
+81	20	4	620.00	1	2026-02-09 20:58:48.838744
+82	13	4	1596.00	1	2026-02-07 20:58:48.838744
+83	59	4	544.00	1	2026-02-06 20:58:48.838744
+84	34	4	1488.00	1	2026-02-04 20:58:48.838744
+85	102	5	3975.00	1	2026-02-03 20:58:48.838744
+86	86	5	1715.00	1	2026-02-03 20:58:48.838744
+87	72	5	4830.00	1	2026-01-30 20:58:48.838744
+88	29	5	1645.00	1	2026-01-30 20:58:48.838744
+89	51	5	2195.00	1	2026-01-29 20:58:48.838744
+90	37	5	4050.00	1	2026-01-29 20:58:48.838744
+91	98	5	1685.00	1	2026-01-29 20:58:48.838744
+92	79	5	1915.00	1	2026-01-27 20:58:48.838744
+93	28	5	4445.00	1	2026-01-26 20:58:48.838744
+94	78	5	2105.00	1	2026-01-24 20:58:48.838744
+95	54	5	3120.00	1	2026-01-24 20:58:48.838744
+96	3	5	1165.00	1	2026-01-23 20:58:48.838744
+97	77	5	3975.00	1	2026-01-22 20:58:48.838744
+98	100	5	1035.00	1	2026-01-20 20:58:48.838744
+99	55	5	625.00	1	2026-01-20 20:58:48.838744
+100	23	5	3295.00	1	2026-01-20 20:58:48.838744
+101	45	5	3705.00	1	2026-01-20 20:58:48.838744
+102	142	1	400.00	1	2026-04-16 20:59:02.100166
+103	98	1	337.00	1	2026-04-16 20:59:02.100166
+104	53	1	510.00	1	2026-04-15 20:59:02.100166
+105	144	1	630.00	1	2026-04-15 20:59:02.100166
+106	32	1	746.00	1	2026-04-15 20:59:02.100166
+107	76	1	532.00	1	2026-04-14 20:59:02.100166
+108	64	1	998.00	1	2026-04-14 20:59:02.100166
+109	22	1	442.00	1	2026-04-14 20:59:02.100166
+110	13	1	399.00	1	2026-04-14 20:59:02.100166
+111	5	1	598.00	1	2026-04-13 20:59:02.100166
+112	75	1	190.00	1	2026-04-13 20:59:02.100166
+113	80	1	574.00	1	2026-04-13 20:59:02.100166
+114	44	1	128.00	1	2026-04-11 20:59:02.100166
+115	58	1	149.00	1	2026-04-11 20:59:02.100166
+116	52	1	393.00	1	2026-04-09 20:59:02.100166
+117	66	1	629.00	1	2026-04-08 20:59:02.100166
+118	40	1	699.00	1	2026-04-08 20:59:02.100166
+119	29	1	329.00	1	2026-04-08 20:59:02.100166
+120	89	1	830.00	1	2026-04-07 20:59:02.100166
+121	4	1	959.00	1	2026-04-07 20:59:02.100166
+122	141	1	347.00	1	2026-04-06 20:59:02.100166
+123	28	1	889.00	1	2026-04-06 20:59:02.100166
+124	88	1	974.00	1	2026-04-05 20:59:02.100166
+125	41	1	275.00	1	2026-04-05 20:59:02.100166
+126	72	1	966.00	1	2026-04-05 20:59:02.100166
+127	122	1	148.00	1	2026-04-05 20:59:02.100166
+128	31	1	848.00	1	2026-04-04 20:59:02.100166
+129	143	1	967.00	1	2026-04-03 20:59:02.100166
+130	12	1	521.00	1	2026-04-03 20:59:02.100166
+131	146	1	143.00	1	2026-04-02 20:59:02.100166
+132	82	1	360.00	1	2026-04-02 20:59:02.100166
+133	101	1	660.00	1	2026-04-01 20:59:02.100166
+134	110	1	428.00	1	2026-03-31 20:59:02.100166
+135	100	2	414.00	1	2026-03-29 20:59:02.100166
+136	151	2	1888.00	1	2026-03-29 20:59:02.100166
+137	134	2	2000.00	1	2026-03-28 20:59:02.100166
+138	46	2	300.00	1	2026-03-27 20:59:02.100166
+139	57	2	1868.00	1	2026-03-27 20:59:02.100166
+140	7	2	1174.00	1	2026-03-26 20:59:02.100166
+141	81	2	564.00	1	2026-03-24 20:59:02.100166
+142	138	2	776.00	1	2026-03-24 20:59:02.100166
+143	105	2	1388.00	1	2026-03-24 20:59:02.100166
+144	65	2	1028.00	1	2026-03-23 20:59:02.100166
+145	133	2	1206.00	1	2026-03-22 20:59:02.100166
+146	126	2	388.00	1	2026-03-22 20:59:02.100166
+147	11	2	512.00	1	2026-03-22 20:59:02.100166
+148	47	2	1830.00	1	2026-03-21 20:59:02.100166
+149	118	2	1184.00	1	2026-03-21 20:59:02.100166
+150	145	2	270.00	1	2026-03-20 20:59:02.100166
+151	77	2	1590.00	1	2026-03-20 20:59:02.100166
+152	6	2	770.00	1	2026-03-20 20:59:02.100166
+153	21	2	378.00	1	2026-03-19 20:59:02.100166
+154	30	2	1380.00	1	2026-03-19 20:59:02.100166
+155	67	2	416.00	1	2026-03-19 20:59:02.100166
+156	36	2	350.00	1	2026-03-18 20:59:02.100166
+157	38	2	1142.00	1	2026-03-17 20:59:02.100166
+158	78	2	842.00	1	2026-03-16 20:59:02.100166
+159	93	2	240.00	1	2026-03-16 20:59:02.100166
+160	102	2	1590.00	1	2026-03-15 20:59:02.100166
+161	103	2	1456.00	1	2026-03-15 20:59:02.100166
+162	112	2	1478.00	1	2026-03-15 20:59:02.100166
+163	8	2	1216.00	1	2026-03-12 20:59:02.100166
+164	124	2	1614.00	1	2026-03-12 20:59:02.100166
+165	17	2	1574.00	1	2026-03-12 20:59:02.100166
+166	26	2	1884.00	1	2026-03-12 20:59:02.100166
+167	119	2	340.00	1	2026-03-12 20:59:02.100166
+168	125	3	1644.00	1	2026-03-11 20:59:02.100166
+169	23	3	1977.00	1	2026-03-10 20:59:02.100166
+170	130	3	1590.00	1	2026-03-10 20:59:02.100166
+171	33	3	2817.00	1	2026-03-10 20:59:02.100166
+172	106	3	894.00	1	2026-03-08 20:59:02.100166
+173	74	3	780.00	1	2026-03-08 20:59:02.100166
+174	60	3	537.00	1	2026-03-07 20:59:02.100166
+175	114	3	639.00	1	2026-03-07 20:59:02.100166
+176	152	3	1701.00	1	2026-03-07 20:59:02.100166
+177	14	3	798.00	1	2026-03-07 20:59:02.100166
+178	132	3	2439.00	1	2026-03-07 20:59:02.100166
+179	137	3	2904.00	1	2026-03-07 20:59:02.100166
+180	113	3	537.00	1	2026-03-06 20:59:02.100166
+181	69	3	2265.00	1	2026-03-06 20:59:02.100166
+182	49	3	1212.00	1	2026-03-05 20:59:02.100166
+183	63	3	1962.00	1	2026-03-05 20:59:02.100166
+184	123	3	1827.00	1	2026-03-04 20:59:02.100166
+185	83	3	2793.00	1	2026-03-03 20:59:02.100166
+186	45	3	2223.00	1	2026-03-02 20:59:02.100166
+187	94	3	2829.00	1	2026-03-02 20:59:02.100166
+188	109	3	468.00	1	2026-03-02 20:59:02.100166
+189	27	3	720.00	1	2026-03-01 20:59:02.100166
+190	15	3	2661.00	1	2026-02-24 20:59:02.100166
+191	91	3	1185.00	1	2026-02-24 20:59:02.100166
+192	85	3	483.00	1	2026-02-24 20:59:02.100166
+193	3	3	699.00	1	2026-02-23 20:59:02.100166
+194	50	3	1098.00	1	2026-02-22 20:59:02.100166
+195	147	3	351.00	1	2026-02-22 20:59:02.100166
+196	42	4	548.00	1	2026-02-20 20:59:02.100166
+197	37	4	3240.00	1	2026-02-19 20:59:02.100166
+198	39	4	1728.00	1	2026-02-19 20:59:02.100166
+199	61	4	1348.00	1	2026-02-19 20:59:02.100166
+200	92	4	844.00	1	2026-02-17 20:59:02.100166
+201	68	4	1628.00	1	2026-02-17 20:59:02.100166
+202	34	4	1488.00	1	2026-02-16 20:59:02.100166
+203	135	4	1628.00	1	2026-02-15 20:59:02.100166
+204	116	4	1040.00	1	2026-02-15 20:59:02.100166
+205	24	4	3428.00	1	2026-02-15 20:59:02.100166
+206	104	4	3424.00	1	2026-02-14 20:59:02.100166
+207	43	4	3836.00	1	2026-02-13 20:59:02.100166
+208	129	4	2520.00	1	2026-02-12 20:59:02.100166
+209	16	4	2436.00	1	2026-02-12 20:59:02.100166
+210	149	4	2200.00	1	2026-02-12 20:59:02.100166
+211	56	4	1980.00	1	2026-02-12 20:59:02.100166
+212	55	4	500.00	1	2026-02-12 20:59:02.100166
+213	62	4	1172.00	1	2026-02-12 20:59:02.100166
+214	117	4	2260.00	1	2026-02-10 20:59:02.100166
+215	59	4	544.00	1	2026-02-09 20:59:02.100166
+216	25	4	2828.00	1	2026-02-08 20:59:02.100166
+217	86	4	1372.00	1	2026-02-08 20:59:02.100166
+218	148	4	3952.00	1	2026-02-08 20:59:02.100166
+219	131	4	2196.00	1	2026-02-07 20:59:02.100166
+220	120	4	2216.00	1	2026-02-07 20:59:02.100166
+221	99	4	560.00	1	2026-02-06 20:59:02.100166
+222	9	4	3884.00	1	2026-02-05 20:59:02.100166
+223	71	4	1684.00	1	2026-02-04 20:59:02.100166
+224	84	5	2270.00	1	2026-02-03 20:59:02.100166
+225	90	5	2705.00	1	2026-02-03 20:59:02.100166
+226	111	5	1910.00	1	2026-02-03 20:59:02.100166
+227	108	5	2240.00	1	2026-02-01 20:59:02.100166
+228	140	5	1445.00	1	2026-02-01 20:59:02.100166
+229	121	5	1640.00	1	2026-02-01 20:59:02.100166
+230	115	5	3460.00	1	2026-02-01 20:59:02.100166
+231	35	5	2695.00	1	2026-01-31 20:59:02.100166
+232	96	5	700.00	1	2026-01-30 20:59:02.100166
+233	48	5	2915.00	1	2026-01-30 20:59:02.100166
+234	128	5	2830.00	1	2026-01-30 20:59:02.100166
+235	87	5	2565.00	1	2026-01-29 20:59:02.100166
+236	19	5	3250.00	1	2026-01-28 20:59:02.100166
+237	150	5	3670.00	1	2026-01-27 20:59:02.100166
+238	10	5	3325.00	1	2026-01-27 20:59:02.100166
+239	18	5	4790.00	1	2026-01-27 20:59:02.100166
+240	95	5	3730.00	1	2026-01-25 20:59:02.100166
+241	70	5	4425.00	1	2026-01-24 20:59:02.100166
+242	51	5	2195.00	1	2026-01-24 20:59:02.100166
+243	97	5	725.00	1	2026-01-23 20:59:02.100166
+244	79	5	1915.00	1	2026-01-22 20:59:02.100166
+245	127	5	585.00	1	2026-01-22 20:59:02.100166
+246	20	5	775.00	1	2026-01-21 20:59:02.100166
+247	54	5	3120.00	1	2026-01-19 20:59:02.100166
+248	107	5	1310.00	1	2026-01-19 20:59:02.100166
+249	136	5	4960.00	1	2026-01-18 20:59:02.100166
+250	139	5	1325.00	1	2026-01-18 20:59:02.100166
+251	73	5	1715.00	1	2026-01-17 20:59:02.100166
+252	153	1	50.00	2	2026-04-16 21:06:50.513327
+253	153	1	50.00	2	2026-04-16 21:08:23.380522
+\.
+
+
+--
+-- TOC entry 5002 (class 0 OID 16421)
+-- Dependencies: 224
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.products (id, name, price, stock, category, created_at, company_id) FROM stdin;
+1	T-Shirt	499	22	clothing	2026-04-16 13:59:17.97788	2
+2	New Test Product	199	50	test	2026-04-16 20:41:05.085509	2
+3	Product 1	233	26	clothing	2026-04-16 20:58:32.679516	1
+4	Product 2	959	137	beauty	2026-04-16 20:58:32.679516	1
+5	Product 3	598	197	electronics	2026-04-16 20:58:32.679516	1
+6	Product 4	385	193	beauty	2026-04-16 20:58:32.679516	1
+7	Product 5	587	102	sports	2026-04-16 20:58:32.679516	1
+8	Product 6	608	45	electronics	2026-04-16 20:58:32.679516	1
+9	Product 7	971	133	sports	2026-04-16 20:58:32.679516	1
+10	Product 8	665	144	beauty	2026-04-16 20:58:32.679516	1
+11	Product 9	256	95	clothing	2026-04-16 20:58:32.679516	1
+12	Product 10	521	156	beauty	2026-04-16 20:58:32.679516	1
+13	Product 11	399	90	clothing	2026-04-16 20:58:32.679516	1
+14	Product 12	266	122	grocery	2026-04-16 20:58:32.679516	1
+15	Product 13	887	162	beauty	2026-04-16 20:58:32.679516	1
+16	Product 14	609	147	electronics	2026-04-16 20:58:32.679516	1
+17	Product 15	787	179	beauty	2026-04-16 20:58:32.679516	1
+18	Product 16	958	12	clothing	2026-04-16 20:58:32.679516	1
+19	Product 17	650	100	beauty	2026-04-16 20:58:32.679516	1
+20	Product 18	155	27	beauty	2026-04-16 20:58:32.679516	1
+21	Product 19	189	63	sports	2026-04-16 20:58:32.679516	1
+22	Product 20	442	132	beauty	2026-04-16 20:58:32.679516	1
+23	Product 21	659	2	electronics	2026-04-16 20:58:32.679516	1
+24	Product 22	857	163	beauty	2026-04-16 20:58:32.679516	1
+25	Product 23	707	7	beauty	2026-04-16 20:58:32.679516	1
+26	Product 24	942	129	grocery	2026-04-16 20:58:32.679516	1
+27	Product 25	240	52	electronics	2026-04-16 20:58:32.679516	1
+28	Product 26	889	117	clothing	2026-04-16 20:58:32.679516	1
+29	Product 27	329	25	grocery	2026-04-16 20:58:32.679516	1
+30	Product 28	690	43	grocery	2026-04-16 20:58:32.679516	1
+31	Product 29	848	126	clothing	2026-04-16 20:58:32.679516	1
+32	Product 30	746	64	grocery	2026-04-16 20:58:32.679516	1
+33	Product 31	939	182	sports	2026-04-16 20:58:32.679516	1
+34	Product 32	372	73	clothing	2026-04-16 20:58:32.679516	1
+35	Product 33	539	175	clothing	2026-04-16 20:58:32.679516	1
+36	Product 34	175	55	electronics	2026-04-16 20:58:32.679516	1
+37	Product 35	810	152	clothing	2026-04-16 20:58:32.679516	1
+38	Product 36	571	24	sports	2026-04-16 20:58:32.679516	1
+39	Product 37	432	9	sports	2026-04-16 20:58:32.679516	1
+40	Product 38	699	9	electronics	2026-04-16 20:58:32.679516	1
+41	Product 39	275	7	sports	2026-04-16 20:58:32.679516	1
+42	Product 40	137	72	grocery	2026-04-16 20:58:32.679516	1
+43	Product 41	959	173	beauty	2026-04-16 20:58:32.679516	1
+44	Product 42	128	144	home	2026-04-16 20:58:32.679516	1
+45	Product 43	741	140	beauty	2026-04-16 20:58:32.679516	1
+46	Product 44	150	19	clothing	2026-04-16 20:58:32.679516	1
+47	Product 45	915	20	clothing	2026-04-16 20:58:32.679516	1
+48	Product 46	583	21	home	2026-04-16 20:58:32.679516	1
+49	Product 47	404	83	clothing	2026-04-16 20:58:32.679516	1
+50	Product 48	366	37	beauty	2026-04-16 20:58:32.679516	1
+51	Product 49	439	9	sports	2026-04-16 20:58:32.679516	1
+52	Product 50	393	64	home	2026-04-16 20:58:32.679516	1
+53	Product 1	510	73	home	2026-04-16 20:58:48.838744	1
+54	Product 2	624	196	grocery	2026-04-16 20:58:48.838744	1
+55	Product 3	125	20	sports	2026-04-16 20:58:48.838744	1
+56	Product 4	495	93	electronics	2026-04-16 20:58:48.838744	1
+57	Product 5	934	134	grocery	2026-04-16 20:58:48.838744	1
+58	Product 6	149	196	electronics	2026-04-16 20:58:48.838744	1
+59	Product 7	136	156	sports	2026-04-16 20:58:48.838744	1
+60	Product 8	179	51	electronics	2026-04-16 20:58:48.838744	1
+61	Product 9	337	61	home	2026-04-16 20:58:48.838744	1
+62	Product 10	293	14	electronics	2026-04-16 20:58:48.838744	1
+63	Product 11	654	178	grocery	2026-04-16 20:58:48.838744	1
+64	Product 12	998	190	sports	2026-04-16 20:58:48.838744	1
+65	Product 13	514	116	home	2026-04-16 20:58:48.838744	1
+66	Product 14	629	102	electronics	2026-04-16 20:58:48.838744	1
+67	Product 15	208	14	sports	2026-04-16 20:58:48.838744	1
+68	Product 16	407	165	home	2026-04-16 20:58:48.838744	1
+69	Product 17	755	144	clothing	2026-04-16 20:58:48.838744	1
+70	Product 18	885	175	beauty	2026-04-16 20:58:48.838744	1
+71	Product 19	421	31	sports	2026-04-16 20:58:48.838744	1
+72	Product 20	966	26	beauty	2026-04-16 20:58:48.838744	1
+73	Product 21	343	108	clothing	2026-04-16 20:58:48.838744	1
+74	Product 22	260	196	beauty	2026-04-16 20:58:48.838744	1
+75	Product 23	190	135	home	2026-04-16 20:58:48.838744	1
+76	Product 24	532	161	clothing	2026-04-16 20:58:48.838744	1
+77	Product 25	795	188	grocery	2026-04-16 20:58:48.838744	1
+78	Product 26	421	39	electronics	2026-04-16 20:58:48.838744	1
+79	Product 27	383	182	beauty	2026-04-16 20:58:48.838744	1
+80	Product 28	574	191	beauty	2026-04-16 20:58:48.838744	1
+81	Product 29	282	169	beauty	2026-04-16 20:58:48.838744	1
+82	Product 30	360	123	beauty	2026-04-16 20:58:48.838744	1
+83	Product 31	931	119	clothing	2026-04-16 20:58:48.838744	1
+84	Product 32	454	26	beauty	2026-04-16 20:58:48.838744	1
+85	Product 33	161	5	sports	2026-04-16 20:58:48.838744	1
+86	Product 34	343	13	electronics	2026-04-16 20:58:48.838744	1
+87	Product 35	513	75	electronics	2026-04-16 20:58:48.838744	1
+88	Product 36	974	142	sports	2026-04-16 20:58:48.838744	1
+89	Product 37	830	98	sports	2026-04-16 20:58:48.838744	1
+90	Product 38	541	177	clothing	2026-04-16 20:58:48.838744	1
+91	Product 39	395	81	home	2026-04-16 20:58:48.838744	1
+92	Product 40	211	92	sports	2026-04-16 20:58:48.838744	1
+93	Product 41	120	6	home	2026-04-16 20:58:48.838744	1
+94	Product 42	943	39	beauty	2026-04-16 20:58:48.838744	1
+95	Product 43	746	57	clothing	2026-04-16 20:58:48.838744	1
+96	Product 44	140	178	home	2026-04-16 20:58:48.838744	1
+97	Product 45	145	25	home	2026-04-16 20:58:48.838744	1
+98	Product 46	337	171	grocery	2026-04-16 20:58:48.838744	1
+99	Product 47	140	25	electronics	2026-04-16 20:58:48.838744	1
+100	Product 48	207	45	beauty	2026-04-16 20:58:48.838744	1
+101	Product 49	660	80	sports	2026-04-16 20:58:48.838744	1
+102	Product 50	795	48	beauty	2026-04-16 20:58:48.838744	1
+103	Product 1	728	54	clothing	2026-04-16 20:59:02.100166	1
+104	Product 2	856	18	grocery	2026-04-16 20:59:02.100166	1
+105	Product 3	694	29	home	2026-04-16 20:59:02.100166	1
+106	Product 4	298	175	electronics	2026-04-16 20:59:02.100166	1
+107	Product 5	262	3	electronics	2026-04-16 20:59:02.100166	1
+108	Product 6	448	123	sports	2026-04-16 20:59:02.100166	1
+109	Product 7	156	95	clothing	2026-04-16 20:59:02.100166	1
+110	Product 8	428	188	sports	2026-04-16 20:59:02.100166	1
+111	Product 9	382	190	electronics	2026-04-16 20:59:02.100166	1
+112	Product 10	739	63	grocery	2026-04-16 20:59:02.100166	1
+113	Product 11	179	96	home	2026-04-16 20:59:02.100166	1
+114	Product 12	213	124	clothing	2026-04-16 20:59:02.100166	1
+115	Product 13	692	19	sports	2026-04-16 20:59:02.100166	1
+116	Product 14	260	73	home	2026-04-16 20:59:02.100166	1
+117	Product 15	565	119	grocery	2026-04-16 20:59:02.100166	1
+118	Product 16	592	170	beauty	2026-04-16 20:59:02.100166	1
+119	Product 17	170	81	clothing	2026-04-16 20:59:02.100166	1
+120	Product 18	554	87	sports	2026-04-16 20:59:02.100166	1
+121	Product 19	328	73	home	2026-04-16 20:59:02.100166	1
+122	Product 20	148	169	clothing	2026-04-16 20:59:02.100166	1
+123	Product 21	609	7	sports	2026-04-16 20:59:02.100166	1
+124	Product 22	807	163	beauty	2026-04-16 20:59:02.100166	1
+125	Product 23	548	136	electronics	2026-04-16 20:59:02.100166	1
+126	Product 24	194	125	home	2026-04-16 20:59:02.100166	1
+127	Product 25	117	84	sports	2026-04-16 20:59:02.100166	1
+128	Product 26	566	30	home	2026-04-16 20:59:02.100166	1
+129	Product 27	630	27	electronics	2026-04-16 20:59:02.100166	1
+130	Product 28	530	69	electronics	2026-04-16 20:59:02.100166	1
+131	Product 29	549	184	electronics	2026-04-16 20:59:02.100166	1
+132	Product 30	813	59	grocery	2026-04-16 20:59:02.100166	1
+133	Product 31	603	99	home	2026-04-16 20:59:02.100166	1
+134	Product 32	1000	39	clothing	2026-04-16 20:59:02.100166	1
+135	Product 33	407	99	sports	2026-04-16 20:59:02.100166	1
+136	Product 34	992	11	home	2026-04-16 20:59:02.100166	1
+137	Product 35	968	38	clothing	2026-04-16 20:59:02.100166	1
+138	Product 36	388	26	sports	2026-04-16 20:59:02.100166	1
+139	Product 37	265	19	clothing	2026-04-16 20:59:02.100166	1
+140	Product 38	289	98	clothing	2026-04-16 20:59:02.100166	1
+141	Product 39	347	27	clothing	2026-04-16 20:59:02.100166	1
+142	Product 40	400	32	beauty	2026-04-16 20:59:02.100166	1
+143	Product 41	967	31	home	2026-04-16 20:59:02.100166	1
+144	Product 42	630	191	electronics	2026-04-16 20:59:02.100166	1
+145	Product 43	135	89	sports	2026-04-16 20:59:02.100166	1
+146	Product 44	143	156	beauty	2026-04-16 20:59:02.100166	1
+147	Product 45	117	180	beauty	2026-04-16 20:59:02.100166	1
+148	Product 46	988	4	home	2026-04-16 20:59:02.100166	1
+149	Product 47	550	10	home	2026-04-16 20:59:02.100166	1
+150	Product 48	734	30	clothing	2026-04-16 20:59:02.100166	1
+151	Product 49	944	107	electronics	2026-04-16 20:59:02.100166	1
+152	Product 50	567	81	grocery	2026-04-16 20:59:02.100166	1
+153	Low Stock Item	50	0	test	2026-04-16 21:04:35.910786	2
+154	Low Stock Demo	120	5	test	2026-04-16 21:45:38.377719	2
+155	Out Of Stock Demo	149	0	test	2026-04-16 21:47:27.905781	2
+157	Widget Pro	249	125	Widgets	2026-04-25 00:48:19.879261	2
+158	Widget Basic	99	45	Widgets	2026-04-25 00:48:19.879261	2
+159	Gadget Plus	189	3	Gadgets	2026-04-25 00:48:19.879261	2
+160	Gadget Mini	79	78	Gadgets	2026-04-25 00:48:19.879261	2
+161	Tool Set Pro	345	8	Tools	2026-04-25 00:48:19.879261	2
+162	Tool Set Basic	149	234	Tools	2026-04-25 00:48:19.879261	2
+163	Accessory Pack	29	0	Accessories	2026-04-25 00:48:19.879261	2
+168	Gadget Mini	79	78	Gadgets	2026-04-25 00:48:53.648035	4
+169	Tool Set Pro	345	8	Tools	2026-04-25 00:48:53.648035	4
+171	Accessory Pack	29	0	Accessories	2026-04-25 00:48:53.648035	4
+172	Premium Bundle	499	56	Bundles	2026-04-25 00:48:53.648035	4
+174	Widget Basic	99	14	Widgets	2026-04-25 00:49:06.897777	4
+173	Widget Pro	249	8	Widgets	2026-04-25 00:49:06.897777	4
+156	Laptop XE	760	56	Gadgets	2026-04-23 20:56:49.066062	4
+180	Premium Bundle	499	24	Bundles	2026-04-25 00:49:06.897777	4
+170	Tool Set Basic	149	2	Tools	2026-04-25 00:48:53.648035	4
+167	Gadget Plus	189	97	Gadgets	2026-04-25 00:48:53.648035	4
+164	Premium Bundle	499	50	Bundles	2026-04-25 00:48:19.879261	2
+\.
+
+
+--
+-- TOC entry 5000 (class 0 OID 16400)
+-- Dependencies: 222
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, name, email, password, role, company_id, created_at, phone, location, notification_settings) FROM stdin;
+1	Saiesha	test@example.com	$2b$10$mok3DFuJ1wnraR0U6KKhzeSL5rXmJ2EjQi1Y.G2PaDofWOa27voP.	company	1	2026-04-16 22:02:38.100457	\N	\N	{}
+3	Admin	admin@vantage.com	$2b$10$/BWF1Pv4t887kIkgmDP7heix9WVjmlrCYTG0q87YdNpkrV3YOjeFe	admin	\N	2026-04-16 22:02:38.100457	\N	\N	{}
+7	x	saieshamittal.17@gmail.com	$2b$10$2iL86rbQLLO15XE3MmiG8.mPu5Ouexg2jhkjXASLAN7ilNp6HCQym	company	3	2026-04-16 23:19:30.547975	\N	\N	{}
+11	x	iamaiesh17@gmail.com	$2b$10$Lo5z8nnR8XESFCoClDzfcecoTG6SbyRdqzfbZqDehTOk4k05USNgW	company	7	2026-04-19 19:55:41.850522	\N	\N	{}
+8	Saiesha	ngo@rescue.com	$2b$10$0SEiE62trMHsdL3YyUyIouz8a3mT6ZtoPTQWe9bzaGHWDiWOQYfp2	company	4	2026-04-16 23:19:36.546414	+1 (555) 123-4567	San Francisco, CA	{"orderUpdates": true, "weeklySummary": true, "lowStockAlerts": true, "marketingEmails": false, "paymentNotifications": true}
+12	Sumit	sumitgupta.sai108@gmail.com	$2b$10$sKRjzoKAOV59oN3xJveAneUcS3KMR1OxXT9hmFir2nUTSklPoK0Si	admin	\N	2026-04-20 00:01:05.115612	\N	\N	{}
+16	Saiesha Mittal	saieshamittal.178@gmail.com	$2b$10$7l7DYd8JWGMlpMPjB.D4H.Cg3CsPWE/GYIIN7I7WEw3oHeTv2i7QG	company	13	2026-05-25 17:38:11.662621	\N	\N	{}
+2	John	john@acme.com	$2b$10$21UgjrxKbs47Jj5EqMOok.8TepUfsHhi7JCus.xDH0TKaLJ4yrPFW	company	2	2026-04-16 22:02:38.100457	+1 (555) 123-4567	San Francisco, CA	{"orderUpdates": true, "weeklySummary": true, "lowStockAlerts": true, "marketingEmails": false, "paymentNotifications": true}
+17	Monika Gupta	monikag.1087@gmail.com	$2b$10$DnQKPfwOmX2R.qyMxTCJheexBgZJFu8C8qn.RJqmlik1uQqYTr1Zm	admin	\N	2026-05-26 19:52:04.7526	\N	\N	{}
+\.
+
+
+--
+-- TOC entry 5014 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.companies_id_seq', 13, true);
+
+
+--
+-- TOC entry 5015 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 253, true);
+
+
+--
+-- TOC entry 5016 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.products_id_seq', 181, true);
+
+
+--
+-- TOC entry 5017 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 17, true);
+
+
+--
+-- TOC entry 4837 (class 2606 OID 16398)
+-- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.companies
+    ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4845 (class 2606 OID 16447)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4843 (class 2606 OID 16431)
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4839 (class 2606 OID 16414)
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- TOC entry 4841 (class 2606 OID 16412)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4848 (class 2606 OID 16453)
+-- Name: orders orders_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4849 (class 2606 OID 16448)
+-- Name: orders orders_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE SET NULL;
+
+
+--
+-- TOC entry 4847 (class 2606 OID 16432)
+-- Name: products products_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4846 (class 2606 OID 16415)
+-- Name: users users_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+-- Completed on 2026-07-12 19:34:00
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict wvEp6x4LkXWLRly3KJxhUurT5jQkb3aZKCucdg0sCVU9WsCXOd32Gm9Ke5McwQb
+
