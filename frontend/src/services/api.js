@@ -43,7 +43,7 @@ export const getApiErrorMessage = (error, fallbackMessage) => {
   }
 
   if (error.request) {
-    return "Cannot connect to the backend API. Make sure the backend server is running on port 5000.";
+    return "Cannot connect to the backend server. Please try again in a few moments.";
   }
 
   return fallbackMessage;
