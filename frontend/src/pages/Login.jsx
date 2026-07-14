@@ -158,7 +158,7 @@ export default function LoginPage() {
           <div className="mt-8 p-4 rounded-xl bg-card border border-border">
             <p className="text-sm font-medium mb-3">Demo Credentials:</p>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p><span className="text-foreground">Admin:</span> (only for administrative users)</p>
+              <p><span className="text-foreground">Admin:</span> only for administrative users</p>
               <p><span className="text-foreground">Client:</span> use your registered email and password</p>
             </div>
           </div>
